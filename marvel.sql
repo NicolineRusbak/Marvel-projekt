@@ -16,7 +16,7 @@ IF  EXISTS (SELECT *
 FROM sys.objects
 WHERE object_id = OBJECT_ID(N'[db_owner].[marvelMovie]') AND type in (N'U'))
 DROP TABLE [db_owner].[marvelMovie]
-GO
+GO 
 
 CREATE TABLE marvelCharacter
 (
