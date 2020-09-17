@@ -16,7 +16,7 @@ IF  EXISTS (SELECT *
 FROM sys.objects
 WHERE object_id = OBJECT_ID(N'[db_owner].[marvelMovie]') AND type in (N'U'))
 DROP TABLE [db_owner].[marvelMovie]
-GO 
+GO
 
 CREATE TABLE marvelCharacter
 (
@@ -102,21 +102,69 @@ VALUES
     (12, 1)
 
 -- Selecting
-SELECT *
-FROM marvelCharacter
+-- SELECT *
+-- FROM marvelCharacter
 
-SELECT *
-FROM marvelMovie
+-- SELECT *
+-- FROM marvelMovie
 
-SELECT *
-FROM marvelCharacMovie
+-- SELECT *
+-- FROM marvelCharacMovie
 
-SELECT *
-FROM marvelCharacMovie
-WHERE FK_characId = 1
+-- SELECT *
+-- FROM marvelCharacMovie
+-- WHERE FK_characId = 1
 
-SELECT characId, characFirstName, FK_characId, FK_movieId
-FROM marvelCharacter
-INNER JOIN marvelCharacMovie
-ON marvelCharacter.characId = marvelCharacMovie.FK_characId
-ORDER BY characId ASC;
+-- SELECT characId, characFirstName, FK_characId, FK_movieId
+-- FROM marvelCharacter
+-- INNER JOIN marvelCharacMovie
+-- ON marvelCharacter.characId = marvelCharacMovie.FK_characId
+-- ORDER BY characId ASC;
+
+
+-- Tables for login and role
+
+-- CREATING USER TABLE
+    CREATE TABLE marvelUserLogin
+    (
+        userID INT IDENTITY (1,1) NOT NULL,
+        userEmail NVARCHAR (255) NOT NULL,
+        userPassword NVARCHAR (255) NOT NULL,
+
+        PRIMARY KEY (userID)
+    ); 
+
+ -- CREATING USERS ROLE TABLE ("marvelUserRole") --
+    CREATE TABLE marvelUserRole
+    (
+        roleID INT IDENTITY (1,1) NOT NULL, 
+        roleName NVARCHAR (255) NOT NULL,
+
+        PRIMARY KEY (roleID)
+    );
+
+ -- CREATING JUNCTION TABLE ("marvelUserLoginRole")
+    CREATE TABLE marvelUserLoginRole
+    (
+        FK_userID INT NOT NULL,
+        FK_roleID INT NOT NULL,
+
+        CONSTRAINT FK_MarvelUserRole_User FOREIGN KEY (FK_userID) REFERENCES marvelUserLogin(userID),
+        CONSTRAINT FK_MarvelUserRole_Role FOREIGN KEY (FK_roleID) REFERENCES marvelUserRole(roleID)
+    );
+
+ -- CREATING USERS PASSWORD TABLE ("marvelUserPassword") 
+    CREATE TABLE marvelUserPassword
+    (
+        FK_userID INT NOT NULL,
+        hashedPassword NVARCHAR(255) NOT NULL,
+
+        CONSTRAINT FK_MarvelPassword_User FOREIGN KEY (FK_userID) REFERENCES marvelUserLogin(userID)
+    );
+
+    INSERT INTO marvelUserLogin (userEmail, userPassword) VALUES 
+    ('user@ucn.dk', 'Password1234');
+
+    INSERT INTO marvelUserRole (roleName) VALUES 
+    ('admin'), 
+    ('member');
