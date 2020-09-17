@@ -1,7 +1,6 @@
 const con = require('../config/connection');
 const sql = require('mssql');
 const Joi = require('joi');
-const bcrypt = require()
 
 class Movie {
     // constructor
@@ -15,7 +14,7 @@ class Movie {
     // validate 
     static validate(movieObj) {
         const schema = Joi.object({
-            movieId: joi.number()
+            movieId: Joi.number()
                 .integer()
                 .min(1),
             movieTitle: Joi.string()
