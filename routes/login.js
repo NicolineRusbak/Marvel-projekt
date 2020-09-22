@@ -18,7 +18,7 @@ router.post('/', async (req, res) => {
         const { error } = User.validateLoginInfo(req.body);
         if (error) throw { statusCode: 400, message: error };
 
-        const loggedInUser = await User.matchUserEmailAndPassword(req.body);
+        const loggedInUser = await User.matchUserNameAndPassword(req.body);
 
         const token = await jwt.sign(JSON.stringify(loggedInUser), crypt.jwtPrivateKey);
 

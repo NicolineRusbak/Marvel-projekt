@@ -8,7 +8,7 @@ class User {
     // constructor
     constructor(userObj) {
         this.userId = userObj.userId;
-        this.userEmail = userObj.userEmail;
+        this.userName = userObj.userName;
         // add info about the user's role --> role object
         if (userObj.role) {
             this.role = {}
@@ -23,9 +23,8 @@ class User {
             userId: Joi.number()
                 .integer()
                 .min(1),
-            userEmail: Joi.string()
-                .email()
-                .max(255),
+            userName: Joi.string()
+                .max(50),
             // add info about the user's role --> role object     
             role: Joi.object({
                 roleId: Joi.number()
@@ -42,9 +41,8 @@ class User {
     // static validateLoginInfo
     static validateLoginInfo(loginInfoObj) {
         const schema = Joi.object({
-            email: Joi.string()
-                .email()
-                .max(255),
+            userName: Joi.string()
+                .max(50),
             password: Joi.string()
                 .min(3)
                 .max(255)
@@ -54,7 +52,7 @@ class User {
     }
 
     // static matchUserEmailAndPassword
-    static matchUserEmailAndPassword(loginInfoObj) {
+    static matchUserNameAndPassword(loginInfoObj) {
         return new Promise((resolve, reject) => {
             (async () => {
                 // we try to:
@@ -78,7 +76,7 @@ class User {
                 try {
                     const pool = await sql.connect(con);
                     const result = await pool.request()
-                        .input('userEmail', sql.NVarChar(255), loginInfoObj.email)
+                        .input('userName', sql.NVarChar(50), loginInfoObj.userName)
                         .query(`SELECT * FROM marvelUserLogin
                                     INNER JOIN marvelUserPassword
                                         ON marvelUserLogin.userID = marvelUserPassword.FK_userID
@@ -86,18 +84,18 @@ class User {
                                         ON marvelUserLogin.userID = marvelUserLoginRole.FK_userID
                                     INNER JOIN marvelUserRole
                                         ON marvelUserLoginRole.FK_roleID = marvelUserRole.roleID
-                                    WHERE marvelUserLogin.userEmail = @userEmail`);
+                                    WHERE marvelUserLogin.userName = @userName`);
 
                     console.log(result);
-                    if (!result.recordset[0]) throw { statusCode: 404, message: "User doesn't exist (password)"};
+                    if (!result.recordset[0]) throw { statusCode: 404, message: "User doesn't exist"};
                     if (result.recordset.length > 1) throw { statusCode: 500, message: 'DB is corrupt' };
 
                     const match = await bcrypt.compare(loginInfoObj.password, result.recordset[0].hashedPassword);
-                    if (!match) throw { statusCode: 404, message: 'Wrong password (hashthing)' };
+                    if (!match) throw { statusCode: 404, message: 'Wrong password' };
 
                     const record = {
                         userId: result.recordset[0].userID,
-                        userEmail: result.recordset[0].userEmail,
+                        userName: result.recordset[0].userName,
                         role: {
                             roleId: result.recordset[0].roleID,
                             roleName: result.recordset[0].roleName
@@ -127,8 +125,8 @@ class User {
         });
     }
 
-    // static readByEmail(email)
-    static readByEmail(email) {
+    // static readByUserName(userName)
+    static readByUserName(userName) {
         return new Promise((resolve, reject) => {
             (async () => {
                 // connect to DB
@@ -143,15 +141,15 @@ class User {
                 try {
                     const pool = await sql.connect(con);
                     const result = await pool.request()
-                        .input('userEmail', sql.NVarChar(255), email)
-                        .query('SELECT * FROM marvelUserLogin WHERE userEmail = @userEmail');
+                        .input('userName', sql.NVarChar(50), userName)
+                        .query('SELECT * FROM marvelUserLogin WHERE userName = @userName');
                     console.log(result);
-                    if (result.recordset.length == 0) throw { statusCode: 404, message: 'User not found (email)' };
+                    if (result.recordset.length == 0) throw { statusCode: 404, message: 'User not found' };
                     if (result.recordset.length > 1) throw { statusCode: 500, message: 'Database is corrupt.' };
 
                     const userWannabe = {
                         userId: result.recordset[0].userID,
-                        userEmail: result.recordset[0].userEmail
+                        userName: result.recordset[0].userName
                     }
 
                     const { error } = User.validate(userWannabe);
@@ -205,11 +203,11 @@ class User {
 
                     const pool = await sql.connect(con);
                     const result1 = await pool.request()
-                        .input('userEmail', sql.NVarChar(255), this.userEmail)
+                        .input('userName', sql.NVarChar(255), this.userName)
                         .input('rawPassword', sql.NVarChar(255), optionsObj.password)
                         .input('hashedPassword', sql.NVarChar(255), hashedPassword)
-                        .query(`INSERT INTO marvelUserLogin (userEmail, userPassword) VALUES (@userEmail, @rawPassword);
-                                SELECT userID, userEmail FROM marvelUserLogin WHERE userID = SCOPE_IDENTITY();
+                        .query(`INSERT INTO marvelUserLogin (userName, userPassword) VALUES (@userName, @rawPassword);
+                                SELECT userID, userName FROM marvelUserLogin WHERE userID = SCOPE_IDENTITY();
                                 INSERT INTO marvelUserPassword (FK_userID, hashedPassword) VALUES (SCOPE_IDENTITY(), @hashedPassword)`);
                     console.log(result1);
                     if (result1.recordset.length != 1) throw { statusCode: 500, message: 'Database is corrupt.' };
@@ -226,7 +224,7 @@ class User {
 
                     const record = {
                         userId: result1.recordset[0].userID,
-                        userEmail: result1.recordset[0].userEmail,
+                        userName: result1.recordset[0].userName,
                         role: {
                             roleId: result2.recordset[0].roleID,
                             roleName: result2.recordset[0].roleName

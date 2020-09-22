@@ -97,46 +97,78 @@ ORDER BY characID ASC;
 
 
 -- CREATING USER TABLE
-    CREATE TABLE marvelUserLogin
-    (
-        userID INT IDENTITY (1,1) NOT NULL,
-        userEmail NVARCHAR (255) NOT NULL,
-        userPassword NVARCHAR (255) NOT NULL,
+CREATE TABLE marvelUserLogin
+(
+    userID INT IDENTITY (1,1) NOT NULL,
+    userName NVARCHAR (50) NOT NULL,
+    userPassword NVARCHAR (255) NOT NULL,
 
-        PRIMARY KEY (userID)
-    ); 
+    PRIMARY KEY (userID)
+);
 
- -- CREATING USERS ROLE TABLE ("marvelUserRole") --
-    CREATE TABLE marvelUserRole
-    (
-        roleID INT IDENTITY (1,1) NOT NULL, 
-        roleName NVARCHAR (255) NOT NULL,
+-- CREATING USERS ROLE TABLE ("marvelUserRole") --
+CREATE TABLE marvelUserRole
+(
+    roleID INT IDENTITY (1,1) NOT NULL,
+    roleName NVARCHAR (255) NOT NULL,
 
-        PRIMARY KEY (roleID)
-    );
+    PRIMARY KEY (roleID)
+);
 
- -- CREATING JUNCTION TABLE ("marvelUserLoginRole")
-    CREATE TABLE marvelUserLoginRole
-    (
-        FK_userID INT NOT NULL,
-        FK_roleID INT NOT NULL,
+-- CREATING JUNCTION TABLE ("marvelUserLoginRole")
+CREATE TABLE marvelUserLoginRole
+(
+    FK_userID INT NOT NULL,
+    FK_roleID INT NOT NULL,
 
-        CONSTRAINT FK_MarvelUserRole_User FOREIGN KEY (FK_userID) REFERENCES marvelUserLogin(userID),
-        CONSTRAINT FK_MarvelUserRole_Role FOREIGN KEY (FK_roleID) REFERENCES marvelUserRole(roleID)
-    );
+    CONSTRAINT FK_MarvelUserRole_User FOREIGN KEY (FK_userID) REFERENCES marvelUserLogin(userID),
+    CONSTRAINT FK_MarvelUserRole_Role FOREIGN KEY (FK_roleID) REFERENCES marvelUserRole(roleID)
+);
 
- -- CREATING USERS PASSWORD TABLE ("marvelUserPassword") 
-    CREATE TABLE marvelUserPassword
-    (
-        FK_userID INT NOT NULL,
-        hashedPassword NVARCHAR(255) NOT NULL,
+-- CREATING USERS PASSWORD TABLE ("marvelUserPassword") 
+CREATE TABLE marvelUserPassword
+(
+    FK_userID INT NOT NULL,
+    hashedPassword NVARCHAR(255) NOT NULL,
 
-        CONSTRAINT FK_MarvelPassword_User FOREIGN KEY (FK_userID) REFERENCES marvelUserLogin(userID)
-    );
+    CONSTRAINT FK_MarvelPassword_User FOREIGN KEY (FK_userID) REFERENCES marvelUserLogin(userID)
+);
 
-    INSERT INTO marvelUserLogin (userEmail, userPassword) VALUES 
-    ('user@ucn.dk', 'Password1234');
+INSERT INTO marvelUserLogin
+    (userName, userPassword)
+VALUES
+    ('SuperUser123', 'Password123'),
+    ('Admin-Man', 'aPassword');
 
-    INSERT INTO marvelUserRole (roleName) VALUES 
-    ('admin'), 
+INSERT INTO marvelUserRole
+    (roleName)
+VALUES
+    ('admin'),
     ('member');
+
+INSERT INTO marvelUserLoginRole
+    (FK_userID, FK_roleID)
+VALUES
+    (1,2),
+    (2,1);
+
+-- SELECT userID, userName, userPassword, FK_userID, FK_roleID
+-- FROM marvelUserLogin
+-- INNER JOIN marvelUserLoginRole
+-- ON marvelUserLogin.userID = marvelUserLoginRole.FK_userID
+-- ORDER BY userID ASC;
+
+-- CREATING MARVEL QUOTE TABLE ("marvelQuote") 
+CREATE TABLE marvelQuote
+(
+    quoteID INT IDENTITY (1,1) NOT NULL,
+    quoteText NVARCHAR (255) NOT NULL,
+
+    PRIMARY KEY (quoteID),
+
+    FK_userID INT,
+    FK_characID INT,
+
+    FOREIGN KEY (FK_userID) REFERENCES marvelUserLogin(userID),
+    FOREIGN KEY (FK_characID) REFERENCES marvelCharacter(characID),
+);

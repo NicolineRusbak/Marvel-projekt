@@ -29,7 +29,7 @@ router.post('/', async (req, res) => {
         if (validatePassword.error) throw { statusCode: 400, message: validatePassword.error };
 
         // here we check with User.readByEmail(userWannabe.userEmail)
-        const existingUser = await User.readByEmail(userWannabe.userEmail);
+        const existingUser = await User.readByUserName(userWannabe.userName);
         throw { statusCode: 403, message: 'Cannot save User in DB.' }
     }
     catch (userCheckError) {
