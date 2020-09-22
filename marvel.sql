@@ -1,26 +1,6 @@
-
-/****** Object:  Table [db_owner].[marvelCharacMovie]    Script Date: 15-09-2020 20:37:10 ******/
-IF  EXISTS (SELECT *
-FROM sys.objects
-WHERE object_id = OBJECT_ID(N'[db_owner].[marvelCharacMovie]') AND type in (N'U'))
-DROP TABLE [db_owner].[marvelCharacMovie]
-GO
-/****** Object:  Table [db_owner].[marvelCharacter]    Script Date: 15-09-2020 20:37:55 ******/
-IF  EXISTS (SELECT *
-FROM sys.objects
-WHERE object_id = OBJECT_ID(N'[db_owner].[marvelCharacter]') AND type in (N'U'))
-DROP TABLE [db_owner].[marvelCharacter]
-GO
-/****** Object:  Table [db_owner].[marvelMovie]    Script Date: 15-09-2020 20:38:22 ******/
-IF  EXISTS (SELECT *
-FROM sys.objects
-WHERE object_id = OBJECT_ID(N'[db_owner].[marvelMovie]') AND type in (N'U'))
-DROP TABLE [db_owner].[marvelMovie]
-GO
-
 CREATE TABLE marvelCharacter
 (
-    characId INT IDENTITY (1,1) NOT NULL,
+    characID INT IDENTITY (1,1) NOT NULL,
     characFirstName NVARCHAR(50) NOT NULL,
     characLastName NVARCHAR(50),
     characAlias NVARCHAR(50) NOT NULL,
@@ -33,33 +13,27 @@ CREATE TABLE marvelCharacter
     characArtefact NVARCHAR(50),
     characActor NVARCHAR(50) NOT NULL,
 
-    PRIMARY KEY (characId)
+    PRIMARY KEY (characID)
 );
 
 CREATE TABLE marvelMovie
 (
-    movieId INT IDENTITY (1,1) NOT NULL,
+    movieID INT IDENTITY (1,1) NOT NULL,
     movieTitle NVARCHAR(50) NOT NULL,
     movieDescription NVARCHAR(1000) NOT NULL,
     movieReleaseYear INT NOT NULL,
 
-    PRIMARY KEY (movieId)
+    PRIMARY KEY (movieID)
 );
 
 CREATE TABLE marvelCharacMovie
 (
-    FK_characId INT,
-    FK_movieId INT,
+    FK_characID INT NOT NULL,
+    FK_movieID INT NOT NULL,
 
-    CONSTRAINT PK_marvelCharacMovie PRIMARY KEY  
-        ( 
-            FK_characId, 
-            FK_movieId 
-        ),
-
-    FOREIGN KEY (FK_characId) REFERENCES marvelCharacter (characId),
-    FOREIGN KEY (FK_movieId) REFERENCES marvelMovie (movieId)
-);
+    CONSTRAINT marvelFK_CharacMovie_charac FOREIGN KEY (FK_characID) REFERENCES marvelCharacter (characID),
+    CONSTRAINT marvelFK_CharacMovie_movie FOREIGN KEY (FK_movieID) REFERENCES marvelMovie (movieID)
+)
 
 -- Populating the DB with test data --
 INSERT INTO marvelCharacter
@@ -86,7 +60,7 @@ VALUES
 
 
 INSERT INTO marvelCharacMovie
-    (FK_characId, FK_movieId)
+    (FK_characID, FK_movieID)
 VALUES
     (1, 1),
     (2, 1),
@@ -102,27 +76,25 @@ VALUES
     (12, 1)
 
 -- Selecting
--- SELECT *
--- FROM marvelCharacter
+SELECT *
+FROM marvelCharacter
 
--- SELECT *
--- FROM marvelMovie
+SELECT *
+FROM marvelMovie
 
--- SELECT *
--- FROM marvelCharacMovie
+SELECT *
+FROM marvelCharacMovie
 
--- SELECT *
--- FROM marvelCharacMovie
--- WHERE FK_characId = 1
+SELECT *
+FROM marvelCharacMovie
+WHERE FK_characId = 1
 
--- SELECT characId, characFirstName, FK_characId, FK_movieId
--- FROM marvelCharacter
--- INNER JOIN marvelCharacMovie
--- ON marvelCharacter.characId = marvelCharacMovie.FK_characId
--- ORDER BY characId ASC;
+SELECT characID, characFirstName, FK_characID, FK_movieID
+FROM marvelCharacter
+INNER JOIN marvelCharacMovie
+ON marvelCharacter.characID = marvelCharacMovie.FK_characID
+ORDER BY characID ASC;
 
-
--- Tables for login and role
 
 -- CREATING USER TABLE
     CREATE TABLE marvelUserLogin
