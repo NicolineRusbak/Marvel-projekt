@@ -68,7 +68,7 @@ class Character {
                     const characters = [];
                     result.recordset.forEach(record => {
                         const characterWannabe = {
-                            characId: record.characId,
+                            characId: record.characID,
                             characFirstName: record.characFirstName,
                             characLastName: record.characLastName,
                             characAlias: record.characAlias,
@@ -99,7 +99,8 @@ class Character {
             })();
         });
     }
-    // readById slettet men kan tages fra Library-version5
+
+    // readById
     static readById(characId){
         return new Promise((resolve, reject) => {
             (async () => {
@@ -113,7 +114,7 @@ class Character {
                     if (!result.recordset[0]) throw { message: 'Character not found.'};
 
                     const record = {
-                        characId: result.recordset[0].characId,
+                        characId: result.recordset[0].characID,
                         characFirstName: result.recordset[0].characFirstName,
                         characLastName: result.recordset[0].characLastName,
                         characAlias: result.recordset[0].characAlias,
