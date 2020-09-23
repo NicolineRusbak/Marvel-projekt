@@ -41,7 +41,7 @@ class Movie {
                     const movies = [];
                     result.recordset.forEach(record => {
                         const movieWannabe = {
-                            movieId: record.movieId,
+                            movieId: record.movieID,
                             movieTitle: record.movieTitle,
                             movieDescription: record.movieDescription,
                             movieReleaseYear: record.movieReleaseYear
@@ -77,7 +77,7 @@ class Movie {
                     if (!result.recordset[0]) throw { message: 'Movie not found.'};
 
                     const record = {
-                        movieId: result.recordset[0].movieId,
+                        movieId: result.recordset[0].movieID,
                         movieTitle: result.recordset[0].movieTitle,
                         movieDescription: result.recordset[0].movieDescription,
                         movieReleaseYear: result.recordset[0].movieReleaseYear
