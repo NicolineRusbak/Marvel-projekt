@@ -15,7 +15,7 @@ router.get('/', async (req, res) => {
     }
 });
 
-router.post('/', async (req, res) => {
+router.post('/', [auth], async (req, res) => {
     res.setHeader('Content-Type', 'application/json');
     const { error } = Quote.validate(req.body);
     if (error) {
@@ -30,8 +30,8 @@ router.post('/', async (req, res) => {
         }
     }
 });
-// , [auth, admin]
-router.delete('/:quoteId', async (req, res) => {
+
+router.delete('/:quoteId', [auth, admin], async (req, res) => {
     try {
         const validateQuoteID = Quote.validate(req.params);
         if (validateQuoteID.error) throw { statusCode: 400, message: validateQuoteID.error };

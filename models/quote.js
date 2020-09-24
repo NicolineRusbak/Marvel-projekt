@@ -67,6 +67,15 @@ class Quote {
                     console.log(result);
                     if (result.recordset.length == 0) throw { statusCode: 404, message: 'Quote not found.' };
                     if (result.recordset.length > 1) throw { statusCode: 500, message: 'Multiple quotes found with same ID. DB is corrupt.' };
+                    const record = {
+                        quoteId: result.recordset[0].quoteID,
+                        quoteText: result.recordset[0].quoteText,
+                    }
+
+                    const { error } = Quote.validate(record);
+                    if (error) throw error;
+
+                    resolve(new Quote(record));
                 }
                 catch (err) {
                     console.log(err);
@@ -132,6 +141,15 @@ class Quote {
                     console.log(result);
                     if (result.recordset.length == 0) throw { statusCode: 404, message: 'Quote not found' };
                     if (result.recordset.length > 1) throw { statusCode: 500, message: 'Multiple quotes found with same ID. DB is corrupt.' };
+                    const record = {
+                        quoteId: result.recordset[0].quoteID,
+                        quoteText: result.recordset[0].quoteText,
+                    }
+
+                    const { error } = Quote.validate(record);
+                    if (error) throw error;
+
+                    resolve(new Quote(record));
                 }
                 catch (err) {
                     console.log(err);
