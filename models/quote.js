@@ -7,6 +7,7 @@ class Quote {
     constructor(quoteObj) {
         this.quoteId = quoteObj.quoteId;
         this.quoteText = quoteObj.quoteText;
+        this.quoteMovie = quoteObj.quoteMovie;
     }
 
     // validate
@@ -17,6 +18,8 @@ class Quote {
                 .min(1),
             quoteText: Joi.string()
                 .max(255),
+            quoteMovie: Joi.string()
+                .max(50),
         });
 
         return schema.validate(quoteObj);
@@ -36,6 +39,7 @@ class Quote {
                         const quoteWannabe = {
                             quoteId: record.quoteID,
                             quoteText: record.quoteText,
+                            quoteMovie: record.quoteMovie,
                         }
 
                         const { error } = Quote.validate(quoteWannabe);
@@ -70,6 +74,7 @@ class Quote {
                     const record = {
                         quoteId: result.recordset[0].quoteID,
                         quoteText: result.recordset[0].quoteText,
+                        quoteMovie: result.recordset[0].quoteMovie,
                     }
 
                     const { error } = Quote.validate(record);
@@ -102,8 +107,9 @@ class Quote {
                     let result = {};
                     result = await pool.request()
                         .input('quoteText', sql.NVarChar(255), this.quoteText)
-                        .query(`INSERT INTO marvelQuote (quoteText)
-                                VALUES (@quoteText);
+                        .input('quoteMovie', sql.NVarChar(50), this.quoteMovie)
+                        .query(`INSERT INTO marvelQuote (quoteText, quoteMovie)
+                                VALUES (@quoteText, @quoteMovie);
                                 SELECT * FROM marvelQuote WHERE marvelQuote.quoteID = SCOPE_IDENTITY()`);
                     console.log(result);
                     if (!result.recordset[0]) throw { message: 'Failed to save quote to database.' };
@@ -111,6 +117,7 @@ class Quote {
                     const record = {
                         quoteId: result.recordset[0].quoteID,
                         quoteText: result.recordset[0].quoteText,
+                        quoteMovie: result.recordset[0].quoteMovie,
                     }
 
                     const { error } = Quote.validate(record);
@@ -144,6 +151,7 @@ class Quote {
                     const record = {
                         quoteId: result.recordset[0].quoteID,
                         quoteText: result.recordset[0].quoteText,
+                        quoteMovie: result.recordset[0].quoteMovie,
                     }
 
                     const { error } = Quote.validate(record);

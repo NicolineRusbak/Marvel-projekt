@@ -76,25 +76,27 @@ VALUES
     (12, 1)
 
 -- Selecting
-SELECT *
-FROM marvelCharacter
+-- SELECT *
+-- FROM marvelCharacter
 
-SELECT *
-FROM marvelMovie
+-- SELECT *
+-- FROM marvelMovie
 
-SELECT *
-FROM marvelCharacMovie
+-- SELECT *
+-- FROM marvelCharacMovie
 
-SELECT *
-FROM marvelCharacMovie
-WHERE FK_characId = 1
+-- SELECT *
+-- FROM marvelCharacMovie
+-- WHERE FK_characId = 1
 
-SELECT characID, characFirstName, FK_characID, FK_movieID
-FROM marvelCharacter
-INNER JOIN marvelCharacMovie
-ON marvelCharacter.characID = marvelCharacMovie.FK_characID
-ORDER BY characID ASC;
+-- SELECT characID, characFirstName, FK_characID, FK_movieID
+-- FROM marvelCharacter
+-- INNER JOIN marvelCharacMovie
+-- ON marvelCharacter.characID = marvelCharacMovie.FK_characID
+-- ORDER BY characID ASC;
 
+
+-- Tables for login and role
 
 -- CREATING USER TABLE
 CREATE TABLE marvelUserLogin
@@ -134,35 +136,24 @@ CREATE TABLE marvelUserPassword
     CONSTRAINT FK_MarvelPassword_User FOREIGN KEY (FK_userID) REFERENCES marvelUserLogin(userID)
 );
 
-INSERT INTO marvelUserLogin
-    (userName, userPassword)
-VALUES
-    ('SuperUser123', 'Password123'),
-    ('Admin-Man', 'aPassword');
-
 INSERT INTO marvelUserRole
     (roleName)
 VALUES
     ('admin'),
     ('member');
 
-INSERT INTO marvelUserLoginRole
-    (FK_userID, FK_roleID)
-VALUES
-    (1,2),
-    (2,1);
-
--- SELECT userID, userName, userPassword, FK_userID, FK_roleID
--- FROM marvelUserLogin
--- INNER JOIN marvelUserLoginRole
--- ON marvelUserLogin.userID = marvelUserLoginRole.FK_userID
--- ORDER BY userID ASC;
+SELECT userID, userName, userPassword, FK_userID, FK_roleID
+FROM marvelUserLogin
+INNER JOIN marvelUserLoginRole
+ON marvelUserLogin.userID = marvelUserLoginRole.FK_userID
+ORDER BY userID ASC;
 
 -- CREATING MARVEL QUOTE TABLE ("marvelQuote") 
 CREATE TABLE marvelQuote
 (
     quoteID INT IDENTITY (1,1) NOT NULL,
     quoteText NVARCHAR (255) NOT NULL,
+    quoteMovie NVARCHAR (50) NOT NULL,
 
     PRIMARY KEY (quoteID),
 
@@ -172,3 +163,5 @@ CREATE TABLE marvelQuote
     FOREIGN KEY (FK_userID) REFERENCES marvelUserLogin(userID),
     FOREIGN KEY (FK_characID) REFERENCES marvelCharacter(characID),
 );
+
+-- SELECT * FROM marvelQuote
