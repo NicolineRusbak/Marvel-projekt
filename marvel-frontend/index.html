@@ -4,14 +4,26 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>WAD Library Frontend</title>
+    <title>Marvel Frontend</title>
 </head>
 
 <body>
+    <input type="email" id="loginName" placeholder="e-mail" />
+    <br>
+    <input type="password" id="loginPassword" placeholder="password" />
+    <br>
+    <button id="loginBtn">Login</button>
+    <button id="loginBtn">Logout</button>
+    <br>
+    <button id="enterProtectedArea">Secret place</button>
+    <hr>
     <button id="listAll">List all characters</button>
-    <div id="output"></div>
+    <div id="output"></div> <br>
+    <button id="listAllMovies">List all movies</button>
+    <div id="outputMovie"></div>
 
-    <script src="script.js"></script>
+    <script src="script.js" defer></script>
+    <script src="script-login.js" defer></script>
 </body>
 
 </html>
