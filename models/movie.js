@@ -158,22 +158,72 @@ class Movie {
                     const pool = await sql.connect(con);
                     const result = await pool.request()
                         .input('movieId', sql.Int, movieId)
-                        .query('SELECT * FROM marvelMovie WHERE movieId = @movieId');
+                        .query(`SELECT * FROM marvelMovie 
+                                INNER JOIN marvelCharacMovie
+                                ON marvelMovie.movieID = marvelCharacMovie.FK_movieID
+                                INNER JOIN marvelCharacter
+                                ON marvelCharacMovie.FK_characID = marvelCharacter.characID
+                                WHERE movieID = @movieID`);
 
                     console.log(result);
-                    if (!result.recordset[0]) throw { message: 'Movie not found.' };
 
-                    const record = {
-                        movieId: result.recordset[0].movieID,
-                        movieTitle: result.recordset[0].movieTitle,
-                        movieDescription: result.recordset[0].movieDescription,
-                        movieReleaseYear: result.recordset[0].movieReleaseYear
-                    }
+                    const movies = [];
+                    let currentMovieId = 0;
+                    result.recordset.forEach(record => {
+                        if (record.movieID == currentMovieId) {
+                            const character = {
+                                characId: record.characID,
+                                characFirstName: record.characFirstName,
+                                characLastName: record.characLastName,
+                                characAlias: record.characAlias,
+                                characDateOfBirth: record.characDateOfBirth,
+                                characGender: record.characGender,
+                                characJob: record.characJob,
+                                characOrigin: record.characOrigin,
+                                characAbility: record.characAbility,
+                                characWeakness: record.characWeakness,
+                                characArtefact: record.characArtefact,
+                                characActor: record.characActor
+                            };
 
-                    const { error } = Movie.validate(record);
-                    if (error) throw error;
+                            const { error } = Character.validate(character);
+                            if (error) throw { statusCode: 409, message: error };
 
-                    resolve(new Movie(record));
+                            _.last(movies).characters.push(new Character(character));
+
+                        } else {
+                            const record1 = {
+                                movieId: record.movieID,
+                                movieTitle: record.movieTitle,
+                                movieDescription: record.movieDescription,
+                                movieReleaseYear: record.movieReleaseYear,
+                                characters: [
+                                    {
+                                        characId: record.characID,
+                                        characFirstName: record.characFirstName,
+                                        characLastName: record.characLastName,
+                                        characAlias: record.characAlias,
+                                        characDateOfBirth: record.characDateOfBirth,
+                                        characGender: record.characGender,
+                                        characJob: record.characJob,
+                                        characOrigin: record.characOrigin,
+                                        characAbility: record.characAbility,
+                                        characWeakness: record.characWeakness,
+                                        characArtefact: record.characArtefact,
+                                        characActor: record.characActor
+                                    }
+                                ]
+                            };
+                            const { error } = Movie.validate(record1);
+                            if (error) throw { statusCode: 409, message: error };
+
+                            movies.push(new Movie(record1));
+
+                            currentMovieId = record1.movieId
+                        }
+                    });
+
+                    resolve(movies);
                 }
                 catch (err) {
                     console.log(err);
