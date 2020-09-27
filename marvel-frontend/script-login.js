@@ -2,7 +2,6 @@ const loginName = document.querySelector("#loginName");
 const loginPassword = document.querySelector("#loginPassword");
 const loginBtn = document.querySelector("#loginBtn");
 const logoutBtn = document.querySelector("#logoutBtn");
-const secretBtn = document.querySelector("#enterProtectedArea");
 const myStorage = window.localStorage;
 // const serverURL = 'https://mmd.ucn.dk:8558'; // mmd.ucn.dk host
 
@@ -46,31 +45,8 @@ loginBtn.addEventListener(
   false
 );
 
-// secretBtn.addEventListener("click", (e) => {
-//   const xhttp = new XMLHttpRequest();
-//   xhttp.onreadystatechange = function () {
-//     if (this.readyState == 4 && this.status == 200) {
-//       const data = JSON.parse(this.responseText);
-//       console.log(data);
-//       // can do any kind of DOM or other manipulation here with the data
-//       // ...
-//     }
-//     if (this.readyState == 4 && this.status >= 400) {
-//       const errorData = JSON.parse(this.responseText);
-//       console.log(errorData);
-//       // Display or do something useful with the error message, warn the user, ect...
-//       //...
-//     }
-//   };
-//   xhttp.open("GET", "http://127.0.0.1:8558/api/users/protected");
-
-//   if (myStorage.getItem("currentUser")) {
-//     const { token } = JSON.parse(myStorage.getItem("currentUser"));
-//     xhttp.setRequestHeader("x-authentication-token", token);
-//   }
-//   xhttp.send();
-// });
-
 logoutBtn.addEventListener("click", (e) => {
+  console.log(e);
   myStorage.removeItem("currentUser");
+  alert("you are now logged out:)");
 });

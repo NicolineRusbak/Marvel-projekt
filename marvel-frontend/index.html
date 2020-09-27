@@ -4,80 +4,25 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <script src="script.js" async defer></script>
-    <script src="script-create.js" async defer></script>
-    <script src="script-login.js" async defer></script>
     <title>Marvel Frontend</title>
 </head>
 
 <body>
-    <input type="text" id="loginName" placeholder="username" />
+    <input type="email" id="loginName" placeholder="e-mail" />
     <br>
     <input type="password" id="loginPassword" placeholder="password" />
     <br>
     <button id="loginBtn">Login</button>
-    <button id="loginBtn">Logout</button>
+    <button id="logoutBtn">Logout</button>
+    <br>
     <hr>
     <button id="listAll">List all characters</button>
     <div id="output"></div> <br>
     <button id="listAllMovies">List all movies</button>
     <div id="outputMovie"></div>
 
-    <h2>Add new character</h2>
-    <form>
-        <label for="characFN">First Name *</label><br>
-        <input type="text" name="characFN" id="characFN">
-        <br>
-        <label for="characLN">Last Name</label><br>
-        <input type="text" name="characLN" id="characLN">
-        <br>
-        <label for="characAlias">Alias *</label><br>
-        <input type="text" name="characAlias" id="characAlias">
-        <br>
-        <label for="characDoB">Date of Birth</label><br>
-        <input type="text" name="characDoB" id="characDoB" placeholder="DD-MM-YYYY">
-        <br>
-        <label for="characGender">Gender *</label><br>
-        <select id="characGender" name="characGender">
-            <option value="Female">Female</option>
-            <option value="Male">Male</option>
-            <option value="Other">Other</option>
-          </select>
-        <br>
-        <label for="characJob">Job</label><br>
-        <input type="text" name="characJob" id="characJob">
-        <br>
-        <label for="characOrigin">Origin *</label><br>
-        <input type="text" name="characOrigin" id="characOrigin">
-        <br>
-        <label for="characAbility">Main ability *</label><br>
-        <input type="text" name="characAbility" id="characAbility">
-        <br>
-        <label for="characWeakness">Main weakness *</label><br>
-        <input type="text" name="characWeakness" id="characWeakness">
-        <br>
-        <label for="characArtefact">Artefact</label><br>
-        <input type="text" name="characArtefact" id="characArtefact">
-        <br>
-        <label for="characActor">Actor full name *</label><br>
-        <input type="text" name="characActor" id="characActor">
-        <br>
-        <button type="submit" id="characSubmit">Submit character</button>
-      </form>
-
-      <h2>Add new movie</h2>
-      <form>
-        <label for="movieTitle">Title *</label><br>
-        <input type="text" name="movieTitle" id="movieTitle">
-        <br>
-        <label for="movieDescription">Description *</label><br>
-        <textarea name="movieDescription" id="movieDescription" style="width:300px; height:200px;"></textarea>
-        <br>
-        <label for="movieReleaseYear">Release year *</label><br>
-        <input type="number" name="movieReleaseYear" id="movieReleaseYear">
-        <br>
-         <button type="submit" id="movieSubmit">Submit movie</button>
-      </form>
+    <script src="script.js" defer></script>
+    <script src="script-login.js" defer></script>
 </body>
 
 </html>
