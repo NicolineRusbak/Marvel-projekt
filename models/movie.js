@@ -136,7 +136,7 @@ class Movie {
 
                             movies.push(new Movie(movieWannabe));
 
-                            currentMovieId = movieWannabe.movieId
+                            currentMovieId = movieWannabe.movieId;
                         }
                     });
 
@@ -151,6 +151,7 @@ class Movie {
             })();
         });
     }
+
     static readById(movieId) {
         return new Promise((resolve, reject) => {
             (async () => {
@@ -256,21 +257,21 @@ class Movie {
                             .input('movieTitle', sql.NVarChar(50), this.movieTitle) // title
                             .input('movieDescription', sql.NVarChar(1000), this.movieDescription) // description
                             .input('movieReleaseYear', sql.Int, this.movieReleaseYear) // release year
-                            .input('characFirstName', sql.NVarChar(50), this.characFirstName)
-                            .input('characLastName', sql.NVarChar(50), this.characLastName)
-                            .input('characAlias', sql.NVarChar(50), this.characAlias)
-                            .input('characDateOfBirth', sql.NVarChar(10), this.characDateOfBirth)
-                            .input('characGender', sql.NVarChar(10), this.characGender)
-                            .input('characJob', sql.NVarChar(50), this.characJob)
-                            .input('characOrigin', sql.NVarChar(50), this.characOrigin)
-                            .input('characAbility', sql.NVarChar(50), this.characAbility)
-                            .input('characWeakness', sql.NVarChar(50), this.characWeakness)
-                            .input('characArtefact', sql.NVarChar(50), this.characArtefact)
-                            .input('characActor', sql.NVarChar(50), this.characActor)
+                            .input('characFirstName', sql.NVarChar(50), this.character.characFirstName)
+                            .input('characLastName', sql.NVarChar(50), this.character.characLastName)
+                            .input('characAlias', sql.NVarChar(50), this.character.characAlias)
+                            .input('characDateOfBirth', sql.NVarChar(10), this.character.characDateOfBirth)
+                            .input('characGender', sql.NVarChar(10), this.character.characGender)
+                            .input('characJob', sql.NVarChar(50), this.character.characJob)
+                            .input('characOrigin', sql.NVarChar(50), this.character.characOrigin)
+                            .input('characAbility', sql.NVarChar(50), this.character.characAbility)
+                            .input('characWeakness', sql.NVarChar(50), this.character.characWeakness)
+                            .input('characArtefact', sql.NVarChar(50), this.character.characArtefact)
+                            .input('characActor', sql.NVarChar(50), this.character.characActor)
                             .query(`INSERT INTO marvelCharacter (characFirstName, characLastName, characAlias, characDateOfBirth, characGender, characJob, characOrigin, characAbility, characWeakness, characArtefact, characActor)
                                     VALUES (@characFirstName, @characLastName, @characAlias, @characDateOfBirth, @characGender, @characJob, @characOrigin, @characAbility, @characWeakness, @characArtefact, @characActor);
                                     INSERT INTO marvelMovie (movieTitle, movieDescription, movieReleaseYear, FK_characID) 
-                                    VALUES (@movieTitle, @movieDescription, @movieReleaseYear, @FK_characID); 
+                                    VALUES (@movieTitle, @movieDescription, @movieReleaseYear, SCOPE_IDENTITY()); 
                                     SELECT * FROM marvelMovie INNER JOIN marvelCharacter ON marvelMovie.FK_characID = marvelCharacter.characID
                                     WHERE marvelMovie.movieID = SCOPE_IDENTITY()`)
                     }
