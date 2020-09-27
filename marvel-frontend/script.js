@@ -76,7 +76,12 @@ function movieOnClickHandle(movieId) {
     const xhttp = new XMLHttpRequest();
     xhttp.onreadystatechange = function () {
         if (this.readyState == 4 && this.status == 200) {
-            divOutputMovie.innerHTML = this.responseText;
+            // divOutputMovie.innerHTML = this.responseText;
+            const response = JSON.parse(this.responseText);
+            divOutputMovie.innerHTML = '';
+            for (let i = 0; i < response.length; i++) {
+                divOutputMovie.innerHTML += `"${response[i].movieTitle}", ${response[i].movieReleaseYear}, ${response[i].movieDescription}, ${response[i].characterAlias}<br/>`;
+            }
         }
         if (this.readyState == 4 && this.status > 400) {
             divOutputMovie.innerHTML = 'Ooops something went wrong.';
