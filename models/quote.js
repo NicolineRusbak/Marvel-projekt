@@ -1,6 +1,7 @@
 const con = require('../config/connection');
 const sql = require('mssql');
 const Joi = require('joi');
+const _ = require('lodash');
 
 class Quote {
     // constuctor
@@ -8,6 +9,8 @@ class Quote {
         this.quoteId = quoteObj.quoteId;
         this.quoteText = quoteObj.quoteText;
         this.quoteMovie = quoteObj.quoteMovie;
+        this.characId = quoteObj.characId;
+        this.characAlias = quoteObj.characAlias;
     }
 
     // validate
@@ -20,6 +23,11 @@ class Quote {
                 .max(255),
             quoteMovie: Joi.string()
                 .max(50),
+            characId: Joi.number()
+                .integer()
+                .min(1),
+            characAlias: Joi.string()
+                .max(50)
         });
 
         return schema.validate(quoteObj);
@@ -32,7 +40,9 @@ class Quote {
                 try {
                     const pool = await sql.connect(con);
                     const result = await pool.request()
-                        .query(`SELECT * FROM marvelQuote`);
+                        .query(`SELECT * FROM marvelQuote
+                INNER JOIN marvelCharacter
+                ON marvelQuote.FK_characID = marvelCharacter.characID`);
 
                     const quotes = [];
                     result.recordset.forEach(record => {
@@ -40,6 +50,8 @@ class Quote {
                             quoteId: record.quoteID,
                             quoteText: record.quoteText,
                             quoteMovie: record.quoteMovie,
+                            characId: record.characID,
+                            characAlias: record.characAlias
                         }
 
                         const { error } = Quote.validate(quoteWannabe);
@@ -67,7 +79,8 @@ class Quote {
                     const result = await pool.request()
                         .input('quoteID', sql.Int, id)
                         .query(`SELECT * FROM marvelQuote
-                            WHERE marvelQuote.quoteID = @quoteID`);
+                    INNER JOIN marvelCharacter
+                    ON marvelQuote.FK_characID = marvelCharacter.characID`);
                     console.log(result);
                     if (result.recordset.length == 0) throw { statusCode: 404, message: 'Quote not found.' };
                     if (result.recordset.length > 1) throw { statusCode: 500, message: 'Multiple quotes found with same ID. DB is corrupt.' };
@@ -75,6 +88,8 @@ class Quote {
                         quoteId: result.recordset[0].quoteID,
                         quoteText: result.recordset[0].quoteText,
                         quoteMovie: result.recordset[0].quoteMovie,
+                        characId: result.recordset[0].characID,
+                        characAlias: record.characAlias
                     }
 
                     const { error } = Quote.validate(record);
@@ -108,9 +123,11 @@ class Quote {
                     result = await pool.request()
                         .input('quoteText', sql.NVarChar(255), this.quoteText)
                         .input('quoteMovie', sql.NVarChar(50), this.quoteMovie)
-                        .query(`INSERT INTO marvelQuote (quoteText, quoteMovie)
-                                VALUES (@quoteText, @quoteMovie);
-                                SELECT * FROM marvelQuote WHERE marvelQuote.quoteID = SCOPE_IDENTITY()`);
+                        .input('FK_characID', sql.Int, this.characId)
+                        .query(`INSERT INTO marvelQuote (quoteText, quoteMovie, FK_characID)
+                                VALUES (@quoteText, @quoteMovie, @FK_characID);
+                                SELECT * FROM marvelQuote INNER JOIN marvelCharacter ON marvelQuote.FK_characID = marvelCharacter.characID
+                                WHERE marvelQuote.quoteID = SCOPE_IDENTITY()`);
                     console.log(result);
                     if (!result.recordset[0]) throw { message: 'Failed to save quote to database.' };
 
@@ -118,6 +135,7 @@ class Quote {
                         quoteId: result.recordset[0].quoteID,
                         quoteText: result.recordset[0].quoteText,
                         quoteMovie: result.recordset[0].quoteMovie,
+                        characId: result.recordset[0].characID,
                     }
 
                     const { error } = Quote.validate(record);
@@ -152,6 +170,7 @@ class Quote {
                         quoteId: result.recordset[0].quoteID,
                         quoteText: result.recordset[0].quoteText,
                         quoteMovie: result.recordset[0].quoteMovie,
+                        characId: result.recordset[0].characId
                     }
 
                     const { error } = Quote.validate(record);

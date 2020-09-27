@@ -93,7 +93,7 @@ btnListAllQuotes.addEventListener('click', (e) => {
             const response = JSON.parse(this.responseText);
             divOutputQuote.innerHTML = '';
             for (let i = 0; i < response.length; i++) {
-                divOutputQuote.innerHTML += `"${response[i].quoteText}", ${response[i].quoteMovie}<br/>`;
+                divOutputQuote.innerHTML += `"${response[i].quoteText}", ${response[i].characAlias}, ${response[i].quoteMovie}<br/>`;
             }
         };
         if (this.readyState == 4 && this.status > 400) {

@@ -10,6 +10,7 @@ const characAbility = document.querySelector('#characAbility');
 const characWeakness = document.querySelector('#characWeakness');
 const characArtefact = document.querySelector('#characArtefact');
 const characActor = document.querySelector('#characActor');
+const FK_movieID = document.querySelector('#FK_movieID');
 const movieSubmit = document.querySelector('#movieSubmit');
 const movieTitle = document.querySelector('#movieTitle');
 const movieDescription = document.querySelector('#movieDescription');
@@ -17,6 +18,7 @@ const movieReleaseYear = document.querySelector('#movieReleaseYear');
 const quoteSubmit = document.querySelector('#quoteSubmit');
 const quoteText = document.querySelector('#quoteText');
 const quoteMovie = document.querySelector('#quoteMovie');
+const FK_characID = document.querySelector('#FK_characID');
 
 characSubmit.addEventListener('click', (characSubmit) => {
     characSubmit.preventDefault();
@@ -53,7 +55,10 @@ characSubmit.addEventListener('click', (characSubmit) => {
             characAbility: characAbility.value,
             characWeakness: characWeakness.value,
             characArtefact: characArtefact.value,
-            characActor: characActor.value
+            characActor: characActor.value,
+            movies: {
+            movieId: FK_movieID.value,
+            }
         }
         xhttp.send(JSON.stringify(payload));
     }
@@ -94,7 +99,7 @@ movieSubmit.addEventListener('click', (movieSubmit) => {
 
 quoteSubmit.addEventListener('click', (quoteSubmit) => {
     quoteSubmit.preventDefault();
-    if (!(quoteText.value && quoteMovie.value)) {
+    if (!(quoteText.value && quoteMovie.value && FK_characID)) {
         alert('Enter all necessary information.');
     } else {
         const xhttp = new XMLHttpRequest();
@@ -118,6 +123,7 @@ quoteSubmit.addEventListener('click', (quoteSubmit) => {
         const payload = {
             quoteText: quoteText.value,
             quoteMovie: quoteMovie.value,
+            characId: FK_characID.value,
         }
         xhttp.send(JSON.stringify(payload));
     }
