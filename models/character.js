@@ -3,10 +3,9 @@ const sql = require('mssql');
 const Joi = require('joi');
 const _ = require('lodash');
 const Movie = require('./movie');
-const { times } = require('lodash');
 
 class Character {
-    // constuctor
+    // constructor
     constructor(characterObj) {
         this.characId = characterObj.characId;
         this.characFirstName = characterObj.characFirstName;
@@ -68,7 +67,7 @@ class Character {
                         .integer()
                         .min(1)
                 })
-                    .or('movieID', 'movieTitle')
+                .or('movieID', 'movieTitle')
             )
         });
 
@@ -88,19 +87,19 @@ class Character {
                                 ON marvelCharacter.characID = marvelCharacMovie.FK_characID
                                 INNER JOIN marvelMovie
                                 ON marvelCharacMovie.FK_movieID = marvelMovie.movieID
-                                ORDER BY marvelMovie.movieID`);
+                                ORDER BY marvelCharacter.characID`);
 
                     console.log(result);
 
                     const characters = [];
-                    let currentCharacterId = 0
+                    let currentCharacterId = 0;
                     result.recordset.forEach(record => {
                         if (record.characID == currentCharacterId) {
                             const movie = {
                                 movieId: record.movieID,
                                 movieTitle: record.movieTitle,
                                 movieDescription: record.movieDescription,
-                                movieReleaseYear: record.movieReleaseYear,
+                                movieReleaseYear: record.movieReleaseYear
                             };
 
                             const { error } = Movie.validate(movie);
@@ -126,7 +125,7 @@ class Character {
                                         movieId: record.movieID,
                                         movieTitle: record.movieTitle,
                                         movieDescription: record.movieDescription,
-                                        movieReleaseYear: record.movieReleaseYear,
+                                        movieReleaseYear: record.movieReleaseYear
                                     }
                                 ]
                             };
@@ -136,7 +135,7 @@ class Character {
 
                             characters.push(new Character(characterWannabe));
 
-                            currentCharacterId = characterWannabe.characID;
+                            currentCharacterId = characterWannabe.characId;
                         }
                     });
 
@@ -214,7 +213,7 @@ class Character {
 
                             characters.push(new Character(characterWannabe));
 
-                            currentCharacterId = characterWannabe.characID;
+                            currentCharacterId = characterWannabe.characId;
                         }
                     });
 
