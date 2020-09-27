@@ -79,7 +79,7 @@ class Movie {
                                 ON marvelMovie.movieID = marvelCharacMovie.FK_movieID
                                 INNER JOIN marvelCharacter
                                 ON marvelCharacMovie.FK_characID = marvelCharacter.characID
-                                ORDER BY marvelCharacter.characID`)
+                                ORDER BY marvelMovie.movieID`)
 
                     console.log(result);
 
@@ -106,7 +106,6 @@ class Movie {
                             if (error) throw { statusCode: 409, message: error };
 
                             _.last(movies).characters.push(new Character(character));
-
                         } else {
                             const movieWannabe = {
                                 movieId: record.movieID,
@@ -136,7 +135,7 @@ class Movie {
 
                             movies.push(new Movie(movieWannabe));
 
-                            currentMovieId = movieWannabe.movieId;
+                            currentMovieId = movieWannabe.movieID; // skulle have været med lille Id, men så kommer der intet resultat overhovedet
                         }
                     });
 
@@ -193,7 +192,7 @@ class Movie {
                             _.last(movies).characters.push(new Character(character));
 
                         } else {
-                            const record1 = {
+                            const movieWannabe = {
                                 movieId: record.movieID,
                                 movieTitle: record.movieTitle,
                                 movieDescription: record.movieDescription,
@@ -215,12 +214,12 @@ class Movie {
                                     }
                                 ]
                             };
-                            const { error } = Movie.validate(record1);
+                            const { error } = Movie.validate(movieWannabe);
                             if (error) throw { statusCode: 409, message: error };
 
-                            movies.push(new Movie(record1));
+                            movies.push(new Movie(movieWannabe));
 
-                            currentMovieId = record1.movieId
+                            currentMovieId = movieWannabe.movieID; // lille id?
                         }
                     });
 
