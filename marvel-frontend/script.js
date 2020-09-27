@@ -95,7 +95,10 @@ function movieOnClickHandle(movieId) {
             const response = JSON.parse(this.responseText);
             divOutputMovie.innerHTML = '';
             for (let i = 0; i < response.length; i++) {
-                divOutputMovie.innerHTML += `"${response[i].movieTitle}", ${response[i].movieReleaseYear}, ${response[i].movieDescription}, ${response[i].characterAlias}<br/>`;
+                divOutputMovie.innerHTML += `<p>Movie title: "${response[i].movieTitle}"</p>
+                <p>Release year: ${response[i].movieReleaseYear}</p>
+                <p>Description: ${response[i].movieDescription}</p>
+                <p>Characters: ${response[i].characterAlias}</p><br/>`;
             }
         }
         if (this.readyState == 4 && this.status > 400) {
