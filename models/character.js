@@ -5,7 +5,7 @@ const _ = require('lodash');
 const Movie = require('./movie');
 
 class Character {
-    // constuctor
+    // constructor
     constructor(characterObj) {
         this.characId = characterObj.characId;
         this.characFirstName = characterObj.characFirstName;
