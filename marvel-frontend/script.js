@@ -36,7 +36,22 @@ function characterOnClickHandle(characId) {
     const xhttp = new XMLHttpRequest();
     xhttp.onreadystatechange = function () {
         if (this.readyState == 4 && this.status == 200) {
-            divOutput.innerHTML = this.responseText;
+            const response = JSON.parse(this.responseText);
+            for (let i = 0; i < response.length; i++) {
+                divOutput.innerHTML = `<p>First name: ${response[i].characFirstName} <p/>
+                                        <p>Last name: ${response[i].characLastName} <p/>
+                                        <p>Alias: ${response[i].characAlias} <p/>
+                                        <p>Date of Birth: ${response[i].characDateOfBirth} <p/>
+                                        <p>Gender: ${response[i].characGender} <p/>
+                                        <p>Job: ${response[i].characJob} <p/>
+                                        <p>Origin: ${response[i].characOrigin} <p/>
+                                        <p>Ability: ${response[i].characAbility} <p/>
+                                        <p>Weakness: ${response[i].characWeakness} <p/>
+                                        <p>Artefact: ${response[i].characArtefact} <p/>
+                                        <p>Actor: ${response[i].characActor} <p/>
+                                        <p>Movies: ${response[i].movies} <p/>
+                                        `;
+            }
         }
         if (this.readyState == 4 && this.status > 400) {
             divOutput.innerHTML = 'Ooops something went wrong.';
